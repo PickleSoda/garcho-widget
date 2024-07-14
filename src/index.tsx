@@ -4,6 +4,6 @@ import App from './App'
 const root = ReactDOM.createRoot(document.getElementById('Garcho') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <App domElement={document.getElementById('Garcho')}  />
   </React.StrictMode>
 );

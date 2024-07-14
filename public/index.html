@@ -29,7 +29,37 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <div id="Garcho" data-garcho-conf="babaylav"></div>
+    <div
+      id="Garcho"
+      data-garcho-conf='{
+        "title": "Garcho",
+        "subtitle": "Customisable chatbot",
+        "senderPlaceHolder": "Type a message...",
+        "showCloseButton": true,
+        "fullScreenMode": false,
+        "autofocus": true,
+        "chatId": "rcw-chat-container",
+        "launcherOpenLabel": "Open chat",
+        "launcherCloseLabel": "Close chat",
+        "launcherOpenImg": "",
+        "launcherCloseImg": "",
+        "sendButtonAlt": "Send",
+        "showTimeStamp": true,
+        "imagePreview": false,
+        "zoomStep": 80,
+        "showBadge": true,
+        "styles": {
+          "clientMessageText": "background-color: #2563EB; color: white;",
+          "responseMessageText": "background-color: #F8F9FA; color: black;",
+          "header": "background-color: #2563EB;",
+          "closeButton": "background-color: #2563EB;",
+          "launcher": "background-color: #2563EB;",
+          "container": "background-color: white",
+          "sender": "background-color: #2563EB;color: black"
+        }
+      }'
+    ></div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
