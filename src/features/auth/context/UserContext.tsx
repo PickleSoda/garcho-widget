@@ -27,15 +27,18 @@ interface SessionResponse {
 
 interface UserContextType {
   user: User | null;
+  session: number | null;
   createUser: (data: Partial<User>) => void;
   updateUser: (data: Partial<User>) => void;
   createSession: (userId: string) => void;
+  initializeSession: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(getUserFromCookies());
+  const [session, setSession] = useState<number | null>(null);
 
   const createUserMutation: UseMutationResult<UserResponse, Error, Partial<User>> = useMutation({
     mutationFn: (data: Partial<User>) => axiosInstance.post('/users/create', data),
@@ -80,6 +83,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const createSession = (userId: string) => {
     createSessionMutation.mutate(userId, {
       onSuccess: (response) => {
+        setSession(response.data.session_id);
+        window.sessionStorage.setItem('chat_session', String(response.data.session_id));
         console.log('Session created:', response.data.session_id);
       },
       onError: (error) => {
@@ -88,8 +93,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const initializeSession = () => {
+    const storedSession = window.sessionStorage.getItem('chat_session');
+    if (storedSession) {
+      setSession(Number(storedSession));
+    }
+    else if (user) {
+      createSession(user.user_id);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, createUser, updateUser, createSession }}>
+    <UserContext.Provider value={{ user, session, createUser, updateUser, createSession, initializeSession }}>
       {children}
     </UserContext.Provider>
   );

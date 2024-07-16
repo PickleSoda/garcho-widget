@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { Widget, addResponseMessage, toggleInputDisabled, toggleMsgLoader, addLinkSnippet } from '@ryaneewx/react-chat-widget';
+import { useEffect } from 'react';
+import { addResponseMessage, toggleInputDisabled, toggleMsgLoader, addLinkSnippet } from '@ryaneewx/react-chat-widget';
 import { useUser } from './features/auth/context/UserContext';
 import Chat from './features/chat';
 import axiosInstance from './utils/axios';
 
 function App({ domElement }: { domElement: HTMLElement | null }) {
-  const { user, createUser, updateUser, createSession } = useUser();
+  const { user, session, createUser, updateUser, createSession, initializeSession } = useUser();
 
   useEffect(() => {
     if (!user) {
@@ -15,6 +15,8 @@ function App({ domElement }: { domElement: HTMLElement | null }) {
         session_count: 0,
         last_login: new Date().toISOString(),
       });
+    } else {
+      initializeSession();
     }
     console.log(user);
   }, [user]);
@@ -25,8 +27,8 @@ function App({ domElement }: { domElement: HTMLElement | null }) {
     toggleMsgLoader();
 
     const data = {
-      agent_id: '6',
-      session_id: 'session-456',
+      agent_id: 6,
+      session_id: session, // Use the session from the context
       message: newMessage,
     };
 
@@ -43,7 +45,6 @@ function App({ domElement }: { domElement: HTMLElement | null }) {
     } finally {
       toggleInputDisabled();
       toggleMsgLoader();
-      addLinkSnippet({ link: 'https://www.bettycrocker.com/recipes/tuna-pickle-pitas/cb8181ca-c6cc-4c6f-b6f4-1a02d47ed868', title: 'Tuna Pickle Pitas' });
     }
   };
 

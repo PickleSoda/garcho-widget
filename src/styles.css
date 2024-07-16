@@ -101,7 +101,7 @@
   color: #fff;
   display: flex;
   flex-direction: column;
-  padding: 15px 0 25px;
+  padding: 15px 0 15px;
   text-align: center;
 }
 .rcw-conversation-container .rcw-title {
@@ -135,7 +135,6 @@
   padding: 0 0 15px;
 }
 .rcw-full-screen .rcw-close-button {
-  background-color: #5e10bc;
   border: 0;
   display: block;
   position: absolute;
@@ -285,7 +284,6 @@
 }
 .rcw-picker-btn,
 .rcw-send {
-  background: #f4f7f9;
   border: 0;
   cursor: pointer;
 }
@@ -293,6 +291,7 @@
 .rcw-send .rcw-send-icon {
   height: 25px;
   margin: 10px;
+  background-color: transparent;
 }
 .rcw-message-disable {
   background-color: #f4f7f9;

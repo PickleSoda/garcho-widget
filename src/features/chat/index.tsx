@@ -50,12 +50,10 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked } : C
         .rcw-client .rcw-message-text { ${parsedConfig.styles.clientMessageText} }
         .rcw-response .rcw-message-text { ${parsedConfig.styles.responseMessageText} }
         .rcw-conversation-container .rcw-header { ${parsedConfig.styles.header} }
-        .rcw-conversation-container .rcw-close-button { ${parsedConfig.styles.closeButton} }
+        .rcw-conversation-container{ ${parsedConfig.styles.closeButton} }
         .rcw-launcher { ${parsedConfig.styles.launcher} }
         .rcw-messages-container { ${parsedConfig.styles.container} }
         .rcw-sender { ${parsedConfig.styles.sender} }
-        .rcw-send { ${parsedConfig.styles.sender} }
-        .rcw-picker-btn { ${parsedConfig.styles.sender} }
       `;
       document.head.appendChild(styleElement);
     }
