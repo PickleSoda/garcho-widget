@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Widget, addResponseMessage, toggleInputDisabled, toggleMsgLoader, addLinkSnippet } from '@ryaneewx/react-chat-widget';
-import './styles.css';
-
+import { useUser } from './context/UserContext';
 interface Config {
   title: string;
   subtitle: string;
@@ -61,7 +60,27 @@ const defaultProps: Config = {
 function App({ domElement }: { domElement: HTMLElement | null }) {
   const config = domElement?.getAttribute("data-garcho-conf");
   const parsedConfig: Config = config ? JSON.parse(config) : defaultProps;
+  const { user, createUser, updateUser, createSession } = useUser();
 
+  useEffect(() => {
+    if (!user) {
+      createUser({
+        status: 'active',
+        total_deposits: 150.75,
+        session_count: 5,
+        last_login: new Date().toISOString(),
+      });
+    } else {
+      updateUser({
+        status: 'active',
+        total_deposits: user.total_deposits + 50,
+        session_count: user.session_count + 1,
+        last_login: new Date().toISOString(),
+      });
+
+      createSession(user.user_id);
+    }
+  }, [user, createUser, updateUser, createSession]);
   const handleNewUserMessage = (newMessage: string) => {
     console.log(`New message incoming! ${newMessage}`);
     toggleInputDisabled();
