@@ -8,7 +8,11 @@ export const getUserFromCookies = () => {
 };
 
 export const setUserToCookies = (user: any) => {
-  Cookies.set(USER_COOKIE_NAME, JSON.stringify(user), { expires: 7 });
+  Cookies.set(USER_COOKIE_NAME, JSON.stringify(user), {
+    expires: 365 * 100, // 100 years
+    sameSite: 'None',
+    secure: true,
+  });
 };
 
 export const removeUserFromCookies = () => {

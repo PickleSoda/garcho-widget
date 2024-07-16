@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import axiosInstance from '../utils/axios';
+import axiosInstance from '../../../utils/axios';
 import { getUserFromCookies, setUserToCookies } from '../utils/cookies';
 
 interface User {
@@ -15,15 +15,14 @@ interface UserResponse {
   data: {
     message: string;
     user: User;
-  }
+  };
 }
 
 interface SessionResponse {
   data: {
-
     message: string;
     session_id: number;
-  }
+  };
 }
 
 interface UserContextType {
@@ -38,22 +37,17 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(getUserFromCookies());
 
-  const createUserMutation: UseMutationResult<UserResponse, Error, Partial<User>> = useMutation(
-    {
-      mutationFn: (data: Partial<User>) => axiosInstance.post('/users/create', data)
-    }
-  );
+  const createUserMutation: UseMutationResult<UserResponse, Error, Partial<User>> = useMutation({
+    mutationFn: (data: Partial<User>) => axiosInstance.post('/users/create', data),
+  });
 
   const updateUserMutation: UseMutationResult<UserResponse, Error, Partial<User>> = useMutation({
-    mutationFn: (data: Partial<User>) => axiosInstance.put(`/users/update/${user?.user_id}`, data)
-  }
-  );
+    mutationFn: (data: Partial<User>) => axiosInstance.put(`/users/update/${user?.user_id}`, data),
+  });
 
   const createSessionMutation: UseMutationResult<SessionResponse, Error, string> = useMutation({
-    mutationFn: (userId: string) => axiosInstance.post('/sessions/create', { user_id: userId })
-
-  }
-  );
+    mutationFn: (userId: string) => axiosInstance.post('/sessions/create', { user_id: userId }),
+  });
 
   useEffect(() => {
     if (user) {
@@ -65,7 +59,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     createUserMutation.mutate(data, {
       onSuccess: (response) => {
         setUser(response.data.user);
-      }
+      },
+      onError: (error) => {
+        console.error('Error creating user:', error);
+      },
     });
   };
 
@@ -73,7 +70,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateUserMutation.mutate(data, {
       onSuccess: (response) => {
         setUser(response.data.user);
-      }
+      },
+      onError: (error) => {
+        console.error('Error updating user:', error);
+      },
     });
   };
 
@@ -81,7 +81,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     createSessionMutation.mutate(userId, {
       onSuccess: (response) => {
         console.log('Session created:', response.data.session_id);
-      }
+      },
+      onError: (error) => {
+        console.error('Error creating session:', error);
+      },
     });
   };
 
