@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { addResponseMessage, addUserMessage, toggleInputDisabled, toggleMsgLoader } from '@ryaneewx/react-chat-widget';
+import { addResponseMessage, toggleInputDisabled, toggleMsgLoader } from '@ryaneewx/react-chat-widget';
 import { useUser } from './features/auth/context/UserContext';
 import Chat from './features/chat';
 import axiosInstance from './utils/axios';
 
 function App({ domElement }: { domElement: HTMLElement | null }) {
   const agent_id = domElement?.getAttribute('data-agent-id');
-
   const { user, session, createUser, initializeSession, addMessageToSession, loadSessionMessages } = useUser();
 
   useEffect(() => {
@@ -20,7 +19,6 @@ function App({ domElement }: { domElement: HTMLElement | null }) {
     } else {
       initializeSession();
     }
-    console.log(user);
   }, [user]);
 
   useEffect(() => {

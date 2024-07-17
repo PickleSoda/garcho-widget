@@ -106,7 +106,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedSession = window.sessionStorage.getItem('chat_session');
     if (storedSession) {
       setSession(Number(storedSession));
-      loadSessionMessages();
     } else if (user) {
       createSession(user.user_id);
     }
