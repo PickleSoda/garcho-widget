@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import axiosInstance from '../../../utils/axios';
 import { getUserFromCookies, setUserToCookies } from '../utils/cookies';
+import { addResponseMessage, addUserMessage,markAllAsRead } from '@ryaneewx/react-chat-widget';
 
 interface User {
   user_id: string;
@@ -25,6 +26,11 @@ interface SessionResponse {
   };
 }
 
+interface Message {
+  sender: 'user' | 'bot';
+  message: string;
+}
+
 interface UserContextType {
   user: User | null;
   session: number | null;
@@ -32,6 +38,8 @@ interface UserContextType {
   updateUser: (data: Partial<User>) => void;
   createSession: (userId: string) => void;
   initializeSession: () => void;
+  addMessageToSession: (message: Message) => void;
+  loadSessionMessages: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -85,6 +93,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       onSuccess: (response) => {
         setSession(response.data.session_id);
         window.sessionStorage.setItem('chat_session', String(response.data.session_id));
+        window.sessionStorage.setItem('chat_messages', JSON.stringify([]));
         console.log('Session created:', response.data.session_id);
       },
       onError: (error) => {
@@ -97,14 +106,32 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedSession = window.sessionStorage.getItem('chat_session');
     if (storedSession) {
       setSession(Number(storedSession));
-    }
-    else if (user) {
+      loadSessionMessages();
+    } else if (user) {
       createSession(user.user_id);
     }
   };
 
+  const addMessageToSession = (message: Message) => {
+    const messages = JSON.parse(window.sessionStorage.getItem('chat_messages') || '[]');
+    messages.push(message);
+    window.sessionStorage.setItem('chat_messages', JSON.stringify(messages));
+  };
+
+  const loadSessionMessages = () => {
+    const messages = JSON.parse(window.sessionStorage.getItem('chat_messages') || '[]');
+    messages.forEach((msg: Message) => {
+      if (msg.sender === 'bot') {
+        addResponseMessage(msg.message);
+      } else {
+        addUserMessage(msg.message);
+      }
+    });
+    markAllAsRead();
+  };
+
   return (
-    <UserContext.Provider value={{ user, session, createUser, updateUser, createSession, initializeSession }}>
+    <UserContext.Provider value={{ user, session, createUser, updateUser, createSession, initializeSession, addMessageToSession, loadSessionMessages }}>
       {children}
     </UserContext.Provider>
   );

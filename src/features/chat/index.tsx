@@ -78,6 +78,8 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked }: Ch
       imagePreview={parsedConfig.imagePreview}
       zoomStep={parsedConfig.zoomStep}
       showBadge={parsedConfig.showBadge}
+      resizable
+      resizableProps={{heightOffset:105, widthOffset:35}}
     />
   );
 }
