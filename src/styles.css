@@ -141,6 +141,8 @@
   right: 10px;
   top: 20px;
   width: 40px;
+  height: 40px;
+
 }
 .rcw-full-screen .rcw-close {
   height: 20px;
@@ -163,6 +165,7 @@
     right: 10px;
     top: 20px;
     width: 40px;
+    height: 40px;
   }
   .rcw-conversation-container .rcw-close {
     height: 20px;
@@ -230,8 +233,9 @@
 .rcw-sender {
   align-items: flex-end;
   align-items: center;
-  background-color: #f4f7f9;
-  border-radius: 0 0 10px 10px;
+  background-color: #ced3d6;
+  border-radius: 0 0 90px 9px;
+  border-top: #e5e5e6 2px solid;
   display: flex;
   height: -moz-max-content;
   height: max-content;
@@ -245,7 +249,6 @@
   height: 55px;
 }
 .rcw-new-message {
-  background-color: #fff;
   border: 0;
   border-radius: 5px;
   padding: 10px 5px;

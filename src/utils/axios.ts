@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://72f9-31-146-6-47.ngrok-free.app/',
+  baseURL: process.env.REACT_APP_API_URL || 'https://api.garcho.com',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Widget} from '@ryaneewx/react-chat-widget';
+import { Widget } from '@ryaneewx/react-chat-widget';
 import { ChatConfig } from "./types"
 
 
@@ -9,7 +9,7 @@ interface ChatProps {
   handleQuickButtonClicked: (newMessage: string) => void;
 }
 
-function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked } : ChatProps) {
+function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked }: ChatProps) {
   const config = domElement?.getAttribute("data-garcho-conf");
 
 
@@ -50,7 +50,6 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked } : C
         .rcw-client .rcw-message-text { ${parsedConfig.styles.clientMessageText} }
         .rcw-response .rcw-message-text { ${parsedConfig.styles.responseMessageText} }
         .rcw-conversation-container .rcw-header { ${parsedConfig.styles.header} }
-        .rcw-conversation-container{ ${parsedConfig.styles.closeButton} }
         .rcw-launcher { ${parsedConfig.styles.launcher} }
         .rcw-messages-container { ${parsedConfig.styles.container} }
         .rcw-sender { ${parsedConfig.styles.sender} }
@@ -72,7 +71,7 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked } : C
       chatId={parsedConfig.chatId}
       launcherOpenLabel={parsedConfig.launcherOpenLabel}
       launcherCloseLabel={parsedConfig.launcherCloseLabel}
-      launcherOpenImg={parsedConfig.launcherOpenImg}
+      launcherOpenImg={parsedConfig.launcherOpenImg || "chat.svg"}
       launcherCloseImg={parsedConfig.launcherCloseImg}
       sendButtonAlt={parsedConfig.sendButtonAlt}
       showTimeStamp={parsedConfig.showTimeStamp}

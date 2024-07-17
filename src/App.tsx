@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
-import { addResponseMessage, toggleInputDisabled, toggleMsgLoader, addLinkSnippet } from '@ryaneewx/react-chat-widget';
+import { addResponseMessage, toggleInputDisabled, toggleMsgLoader } from '@ryaneewx/react-chat-widget';
 import { useUser } from './features/auth/context/UserContext';
 import Chat from './features/chat';
 import axiosInstance from './utils/axios';
 
 function App({ domElement }: { domElement: HTMLElement | null }) {
-  const { user, session, createUser, updateUser, createSession, initializeSession } = useUser();
+  const agent_id = domElement?.getAttribute('data-agent-id');
 
+  const { user, session, createUser, initializeSession } = useUser();
+  
   useEffect(() => {
     if (!user) {
       createUser({
@@ -27,7 +29,7 @@ function App({ domElement }: { domElement: HTMLElement | null }) {
     toggleMsgLoader();
 
     const data = {
-      agent_id: 6,
+      agent_id: agent_id,
       session_id: session, // Use the session from the context
       message: newMessage,
     };
