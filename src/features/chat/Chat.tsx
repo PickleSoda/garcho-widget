@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
+// src/features/chat/Chat.tsx
+
+import React from 'react';
 import { Widget } from '@ryaneewx/react-chat-widget';
-import { ChatConfig } from "./types"
+import { ChatConfig } from "./types";
+import useChatMessages from './hooks/useChatMessages';
+import useChatStyles from './hooks/useChatStyles';
 
 
 interface ChatProps {
   domElement: HTMLElement | null;
-  handleNewUserMessage: (newMessage: string) => void;
-  handleQuickButtonClicked: (newMessage: string) => void;
 }
 
-function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked }: ChatProps) {
+function Chat({ domElement }: ChatProps) {
   const config = domElement?.getAttribute("data-garcho-conf");
+  const agent_id = domElement?.getAttribute('data-agent-id');
 
+  const { handleNewUserMessage } = useChatMessages(agent_id|| null);
 
   const defaultProps: ChatConfig = {
     title: 'Welcome',
@@ -42,26 +46,12 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked }: Ch
   };
 
   const parsedConfig: ChatConfig = config ? JSON.parse(config) : defaultProps;
+  useChatStyles(parsedConfig.styles);
 
-  useEffect(() => {
-    if (parsedConfig.styles) {
-      const styleElement = document.createElement('style');
-      styleElement.innerHTML = `
-        .rcw-client .rcw-message-text { ${parsedConfig.styles.clientMessageText} }
-        .rcw-response .rcw-message-text { ${parsedConfig.styles.responseMessageText} }
-        .rcw-conversation-container .rcw-header { ${parsedConfig.styles.header} }
-        .rcw-launcher { ${parsedConfig.styles.launcher} }
-        .rcw-messages-container { ${parsedConfig.styles.container} }
-        .rcw-sender { ${parsedConfig.styles.sender} }
-      `;
-      document.head.appendChild(styleElement);
-    }
-  }, [parsedConfig.styles]);
 
   return (
     <Widget
       handleNewUserMessage={handleNewUserMessage}
-      handleQuickButtonClicked={handleQuickButtonClicked}
       title={parsedConfig.title}
       subtitle={parsedConfig.subtitle}
       senderPlaceHolder={parsedConfig.senderPlaceHolder}
@@ -71,7 +61,7 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked }: Ch
       chatId={parsedConfig.chatId}
       launcherOpenLabel={parsedConfig.launcherOpenLabel}
       launcherCloseLabel={parsedConfig.launcherCloseLabel}
-      launcherOpenImg={parsedConfig.launcherOpenImg || "chat.svg"}
+      launcherOpenImg={parsedConfig.launcherOpenImg}
       launcherCloseImg={parsedConfig.launcherCloseImg}
       sendButtonAlt={parsedConfig.sendButtonAlt}
       showTimeStamp={parsedConfig.showTimeStamp}
@@ -79,7 +69,7 @@ function Chat({ domElement, handleNewUserMessage, handleQuickButtonClicked }: Ch
       zoomStep={parsedConfig.zoomStep}
       showBadge={parsedConfig.showBadge}
       resizable
-      resizableProps={{heightOffset:105, widthOffset:35}}
+      resizableProps={{ heightOffset: 105, widthOffset: 35 }}
     />
   );
 }
