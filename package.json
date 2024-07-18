@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@picklesoda/react-chat-widget": "^3.5.0",
     "@ryaneewx/react-chat-widget": "^3.4.1",
     "@tanstack/react-query": "^5.51.1",
     "@testing-library/jest-dom": "^5.17.0",

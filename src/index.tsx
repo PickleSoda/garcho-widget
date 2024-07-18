@@ -4,8 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App'
 import { UserProvider } from './features/auth/context/UserContext';
 import { ChatSessionProvider } from './features/chat/context/ChatSessionContext';
-import './styles.css';
-
+// import './styles.css';
+import "@picklesoda/react-chat-widget/lib/styles.css";
 
 const queryClient = new QueryClient();
 

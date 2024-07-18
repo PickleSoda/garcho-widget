@@ -1,7 +1,7 @@
 // src/hooks/useChatMessages.ts
 
 import { useEffect, useCallback } from 'react';
-import { addResponseMessage, toggleInputDisabled, toggleMsgLoader } from '@ryaneewx/react-chat-widget';
+import { addResponseMessage, toggleInputDisabled, toggleMsgLoader, dropMessages, markAllAsRead } from '@picklesoda/react-chat-widget';
 import axiosInstance from '../../../lib/axios';
 import { useChatSession } from '../context/ChatSessionContext';
 
@@ -18,6 +18,12 @@ const useChatMessages = (agent_id: string | null) => {
   useEffect(() => {
     if (session) {
       loadSessionMessages();
+    }
+    else
+    {
+      dropMessages();
+      markAllAsRead();
+      addResponseMessage("Welcome to Garcho! \n Let me know how if you need help with anything.");
     }
   }, [session, loadSessionMessages]);
 

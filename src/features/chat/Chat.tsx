@@ -1,7 +1,7 @@
 // src/features/chat/Chat.tsx
 
 import React from 'react';
-import { Widget } from '@ryaneewx/react-chat-widget';
+import { Widget } from '@picklesoda/react-chat-widget';
 import { ChatConfig } from "./types";
 import useChatMessages from './hooks/useChatMessages';
 import useChatStyles from './hooks/useChatStyles';
