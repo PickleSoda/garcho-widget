@@ -41,7 +41,7 @@
   background-color: #f4f7f9;
   border-radius: 20px;
   max-width: 215px;
-  padding: 10px  15px;
+  padding: 10px 15px;
   text-align: left;
 }
 .rcw-message-text p {
@@ -250,7 +250,8 @@
   width: calc(100% - 10px);
   height: 100%;
   margin-left: auto;
-  margin-right: auto;}
+  margin-right: auto;
+}
 .rcw-new-message:focus {
   outline: none;
 }
@@ -281,9 +282,8 @@
   content: attr(placeholder);
 }
 
-
 .rcw-picker-btn,
-.rcw-send{
+.rcw-send {
   position: absolute;
   bottom: 10px;
   padding: 0 10px 0 10px;
@@ -307,7 +307,7 @@
   background-color: transparent;
   border: 0;
   cursor: pointer;
-} 
+}
 .rcw-message-disable {
   cursor: not-allowed;
 }
@@ -582,7 +582,6 @@
   position: fixed;
   right: 0;
   z-index: 9999;
-
 }
 .rcw-full-screen {
   height: 100vh;
