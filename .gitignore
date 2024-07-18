@@ -28,3 +28,4 @@ yarn-error.log*
 /.parcel-cache
 /.cache
 /.vscode
+/.env
