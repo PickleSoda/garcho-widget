@@ -5,11 +5,6 @@ import { addResponseMessage, toggleInputDisabled, toggleMsgLoader, dropMessages,
 import axiosInstance from '../../../lib/axios';
 import { useChatSession } from '../context/ChatSessionContext';
 
-interface Message {
-  sender: 'user' | 'bot';
-  message: string;
-}
-
 const useChatMessages = (agent_id: string | null) => {
 
   const { session, addMessageToSession, loadSessionMessages } = useChatSession();

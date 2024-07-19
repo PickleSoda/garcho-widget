@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useUser } from './features/auth/context/UserContext';
 import Chat from './features/chat/Chat';
 import { useChatSession } from './features/chat/context/ChatSessionContext';
-
 function App({ domElement }: { domElement: HTMLElement | null }) {
   const { user, createUser} = useUser();
   const { initializeSession } = useChatSession();
