@@ -42,7 +42,6 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const initializeSession = useCallback((userId: string) => {
         const storedSession = window.sessionStorage.getItem('chat_session');
-        console.log('Stored session:', storedSession, userId);
         if (storedSession) {
             setSession(Number(storedSession));
         } else {

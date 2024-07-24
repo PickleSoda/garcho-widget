@@ -12,7 +12,6 @@ const useChatMessages = (agent_id: string | null) => {
 
   const handleNewUserMessage = useCallback(
     async (newMessage: string) => {
-      console.log(`New message incoming! ${newMessage}`);
       toggleInputDisabled();
       toggleMsgLoader();
 
@@ -34,7 +33,6 @@ const useChatMessages = (agent_id: string | null) => {
           addMessageToSession({ sender: 'bot', message: 'Sorry, I did not understand that.' });
         }
       } catch (error) {
-        console.error('Error sending message:', error);
         addResponseMessage('There was an error sending your message.');
         addMessageToSession({ sender: 'bot', message: 'There was an error sending your message.' });
       } finally {

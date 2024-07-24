@@ -26,7 +26,6 @@ function Chat({ domElement }: ChatProps) {
   const hasLoadedMessages = useRef(false);
 
   const handleToggleLoader = (status: boolean) => {
-    console.log('Toggling loader:', status);
     toggleInputDisabled();
     if (status) {
       if (!user) {
@@ -43,7 +42,6 @@ function Chat({ domElement }: ChatProps) {
       }
 
       if (!hasLoadedMessages.current) {
-        console.log('Loading session messages');
         loadSessionMessages(message);
         hasLoadedMessages.current = true;
       } else if (!session) {
