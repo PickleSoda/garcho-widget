@@ -20,7 +20,7 @@ interface UserResponse {
 
 interface UserContextType {
   user: User | null;
-  createUser: (data: Partial<User>) => number|void;
+  createUser: (data: Partial<User>, callback: (userId: string) => void) => void;
   updateUser: (data: Partial<User>) => void;
 }
 
@@ -29,11 +29,14 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(getUserFromCookies());
 
-  const createUserMutation: UseMutationResult<UserResponse, Error, Partial<User>> = useMutation({
+  const createUserMutation: UseMutationResult<UserResponse, Error, Partial<User> > = useMutation({
     mutationFn: (data: Partial<User>) => axiosInstance.post('/users/create', data),
-    onSuccess: (response) => {
+    onSuccess: (response, variables, context: { callback?: (userId: string) => void }) => {
       setUser(response.data.user);
       setUserToCookies(response.data.user);
+      if (context?.callback) {
+        context.callback(response.data.user.user_id);
+      }
     },
     onError: (error) => {
       console.error('Error creating user:', error);
@@ -50,10 +53,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     },
   });
 
-  const createUser = (data: Partial<User>) => {
-    return createUserMutation.mutate(data);
 
+  const createUser = (data: Partial<User>, callback: (userId: string) => void) => {
+    createUserMutation.mutate(data, {
+      onSuccess: (response) => {
+        callback(response.data.user.user_id);
+      },
+    });
   };
+
 
   const updateUser = (data: Partial<User>) => {
     updateUserMutation.mutate(data);

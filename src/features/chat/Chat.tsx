@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Widget } from '@picklesoda/react-chat-widget';
 import { ChatConfig, defaultProps } from "./config";
 import useChatMessages from './hooks/useChatMessages';
@@ -30,20 +30,17 @@ function Chat({ domElement }: ChatProps) {
     toggleInputDisabled();
     if (status) {
       if (!user) {
-        const id = createUser({
+        createUser({
           status: 'active',
           total_deposits: 0,
           session_count: 0,
           last_login: new Date().toISOString(),
+        }, (createdUserId) => {
+          initializeSession(createdUserId);
         });
-        console.log('Creating user:', id);
-
-        id && initializeSession(id.toString());
-      }
-      else {
+      } else {
         initializeSession(user.user_id);
       }
-
 
       if (!hasLoadedMessages.current) {
         console.log('Loading session messages');
