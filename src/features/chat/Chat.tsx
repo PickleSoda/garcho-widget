@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {  useRef } from 'react';
 import { Widget } from '@picklesoda/react-chat-widget';
 import { ChatConfig, defaultProps } from "./config";
 import useChatMessages from './hooks/useChatMessages';

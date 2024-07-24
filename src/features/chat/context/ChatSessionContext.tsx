@@ -71,7 +71,7 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
             }
         });
         markAllAsRead();
-    }, []);
+    }, [addMessageToSession]);
 
     return (
         <ChatSessionContext.Provider value={{ session, createSession: createSessionMutation.mutate, initializeSession, addMessageToSession, loadSessionMessages }}>
