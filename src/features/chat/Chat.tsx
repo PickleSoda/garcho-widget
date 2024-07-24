@@ -1,14 +1,11 @@
-// src/features/chat/Chat.tsx
-
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Widget } from '@picklesoda/react-chat-widget';
 import { ChatConfig, defaultProps } from "./config";
 import useChatMessages from './hooks/useChatMessages';
 import useChatStyles from './hooks/useChatStyles';
 import { useChatSession } from './context/ChatSessionContext';
 import { useUser } from '../auth/context/UserContext';
-
-
+import { toggleInputDisabled } from '@picklesoda/react-chat-widget';
 
 interface ChatProps {
   domElement: HTMLElement | null;
@@ -17,42 +14,47 @@ interface ChatProps {
 function Chat({ domElement }: ChatProps) {
   const config = domElement?.getAttribute("data-garcho-conf");
   const agent_id = domElement?.getAttribute('data-agent-id');
-  const message = domElement?.getAttribute('data-message');
-
+  const message = domElement?.getAttribute('data-message') || 'Hello, how can I help you today?';
 
   const { user, createUser } = useUser();
-
-  const { session, loadSessionMessages, loadFirstMessage, initializeSession } = useChatSession();
-
+  const { session, loadSessionMessages, initializeSession } = useChatSession();
   const { handleNewUserMessage } = useChatMessages(agent_id || null);
-
-
 
   const parsedConfig: ChatConfig = config ? JSON.parse(config) : defaultProps;
   useChatStyles(parsedConfig.styles);
 
+  const hasLoadedMessages = useRef(false);
+
   const handleToggleLoader = (status: boolean) => {
-    console.log('toggle loader', status);
+    console.log('Toggling loader:', status);
+    toggleInputDisabled();
     if (status) {
       if (!user) {
-        createUser({
+        const id = createUser({
           status: 'active',
           total_deposits: 0,
           session_count: 0,
           last_login: new Date().toISOString(),
         });
-      } else {
-        initializeSession(user.user_id);
-      }
-      if (session) {
-        loadSessionMessages();
+        console.log('Creating user:', id);
+
+        id && initializeSession(id.toString());
       }
       else {
-        loadFirstMessage('Hello, how can I help you today?');
+        initializeSession(user.user_id);
+      }
+
+
+      if (!hasLoadedMessages.current) {
+        console.log('Loading session messages');
+        loadSessionMessages(message);
+        hasLoadedMessages.current = true;
+      } else if (!session) {
+        hasLoadedMessages.current = true;
       }
     }
-  }
-
+    toggleInputDisabled();
+  };
 
   return (
     <Widget

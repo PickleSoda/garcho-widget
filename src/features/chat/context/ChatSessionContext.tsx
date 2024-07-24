@@ -1,5 +1,3 @@
-// src/features/chat/context/ChatSessionContext.tsx
-
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import axiosInstance from '../../../lib/axios';
@@ -22,14 +20,12 @@ interface ChatSessionContextType {
     createSession: (userId: string) => void;
     initializeSession: (userId: string) => void;
     addMessageToSession: (message: Message) => void;
-    loadSessionMessages: () => void;
-    loadFirstMessage: (message: string) => void;
+    loadSessionMessages: (message: string) => void;
 }
 
 const ChatSessionContext = createContext<ChatSessionContextType | undefined>(undefined);
 
 export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
     const [session, setSession] = useState<number | null>(null);
 
     const createSessionMutation: UseMutationResult<SessionResponse, Error, string> = useMutation({
@@ -38,7 +34,6 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
             setSession(response.data.session_id);
             window.sessionStorage.setItem('chat_session', String(response.data.session_id));
             window.sessionStorage.setItem('chat_messages', JSON.stringify([]));
-            console.log('Session created:', response.data.session_id);
         },
         onError: (error) => {
             console.error('Error creating session:', error);
@@ -47,6 +42,7 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const initializeSession = useCallback((userId: string) => {
         const storedSession = window.sessionStorage.getItem('chat_session');
+        console.log('Stored session:', storedSession, userId);
         if (storedSession) {
             setSession(Number(storedSession));
         } else {
@@ -60,9 +56,13 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
         window.sessionStorage.setItem('chat_messages', JSON.stringify(messages));
     }, []);
 
-    const loadSessionMessages = useCallback(() => {
+    const loadSessionMessages = useCallback((message: string) => {
         const messages = JSON.parse(window.sessionStorage.getItem('chat_messages') || '[]');
-        console.log('Loading session messages:', messages);
+        if (messages.length === 0) {
+            addMessageToSession({ sender: 'bot', message });
+            addResponseMessage(message);
+            markAllAsRead();
+        }
         messages.forEach((msg: Message) => {
             if (msg.sender === 'bot') {
                 addResponseMessage(msg.message);
@@ -73,17 +73,8 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
         markAllAsRead();
     }, []);
 
-    const loadFirstMessage = (message: string) => {
-        const messages = JSON.parse(window.sessionStorage.getItem('chat_messages') || '[]');
-        if (messages.length === 0) {
-            addMessageToSession({ sender: 'bot', message });
-            addResponseMessage(message);
-            markAllAsRead()
-        }
-    };
-
     return (
-        <ChatSessionContext.Provider value={{ session, createSession: createSessionMutation.mutate, initializeSession, addMessageToSession, loadSessionMessages, loadFirstMessage }}>
+        <ChatSessionContext.Provider value={{ session, createSession: createSessionMutation.mutate, initializeSession, addMessageToSession, loadSessionMessages }}>
             {children}
         </ChatSessionContext.Provider>
     );
