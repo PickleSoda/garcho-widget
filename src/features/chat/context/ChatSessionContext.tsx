@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import axiosInstance from '../../../lib/axios';
-import { addResponseMessage, addUserMessage, markAllAsRead } from '@ryaneewx/react-chat-widget';
+import { addResponseMessage, addUserMessage, markAllAsRead } from '@picklesoda/react-chat-widget';
 
 interface SessionResponse {
     data: {
@@ -23,11 +23,13 @@ interface ChatSessionContextType {
     initializeSession: (userId: string) => void;
     addMessageToSession: (message: Message) => void;
     loadSessionMessages: () => void;
+    loadFirstMessage: (message: string) => void;
 }
 
 const ChatSessionContext = createContext<ChatSessionContextType | undefined>(undefined);
 
 export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
     const [session, setSession] = useState<number | null>(null);
 
     const createSessionMutation: UseMutationResult<SessionResponse, Error, string> = useMutation({
@@ -60,6 +62,7 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const loadSessionMessages = useCallback(() => {
         const messages = JSON.parse(window.sessionStorage.getItem('chat_messages') || '[]');
+        console.log('Loading session messages:', messages);
         messages.forEach((msg: Message) => {
             if (msg.sender === 'bot') {
                 addResponseMessage(msg.message);
@@ -70,8 +73,17 @@ export const ChatSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
         markAllAsRead();
     }, []);
 
+    const loadFirstMessage = (message: string) => {
+        const messages = JSON.parse(window.sessionStorage.getItem('chat_messages') || '[]');
+        if (messages.length === 0) {
+            addMessageToSession({ sender: 'bot', message });
+            addResponseMessage(message);
+            markAllAsRead()
+        }
+    };
+
     return (
-        <ChatSessionContext.Provider value={{ session, createSession: createSessionMutation.mutate, initializeSession, addMessageToSession, loadSessionMessages }}>
+        <ChatSessionContext.Provider value={{ session, createSession: createSessionMutation.mutate, initializeSession, addMessageToSession, loadSessionMessages, loadFirstMessage }}>
             {children}
         </ChatSessionContext.Provider>
     );

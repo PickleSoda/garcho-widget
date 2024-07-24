@@ -1,10 +1,13 @@
 // src/features/chat/Chat.tsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Widget } from '@picklesoda/react-chat-widget';
-import { ChatConfig } from "./types";
+import { ChatConfig, defaultProps } from "./config";
 import useChatMessages from './hooks/useChatMessages';
 import useChatStyles from './hooks/useChatStyles';
+import { useChatSession } from './context/ChatSessionContext';
+import { useUser } from '../auth/context/UserContext';
+
 
 
 interface ChatProps {
@@ -14,39 +17,41 @@ interface ChatProps {
 function Chat({ domElement }: ChatProps) {
   const config = domElement?.getAttribute("data-garcho-conf");
   const agent_id = domElement?.getAttribute('data-agent-id');
+  const message = domElement?.getAttribute('data-message');
 
-  const { handleNewUserMessage } = useChatMessages(agent_id|| null);
 
-  const defaultProps: ChatConfig = {
-    title: 'Welcome',
-    subtitle: 'This is your chat subtitle',
-    senderPlaceHolder: 'Type a message...',
-    showCloseButton: true,
-    fullScreenMode: false,
-    autofocus: true,
-    chatId: 'rcw-chat-container',
-    launcherOpenLabel: 'Open chat',
-    launcherCloseLabel: 'Close chat',
-    launcherOpenImg: '',
-    launcherCloseImg: '',
-    sendButtonAlt: 'Send',
-    showTimeStamp: true,
-    imagePreview: false,
-    zoomStep: 80,
-    showBadge: true,
-    styles: {
-      clientMessageText: '',
-      responseMessageText: '',
-      header: '',
-      closeButton: '',
-      launcher: '',
-      container: '',
-      sender: '',
-    }
-  };
+  const { user, createUser } = useUser();
+
+  const { session, loadSessionMessages, loadFirstMessage, initializeSession } = useChatSession();
+
+  const { handleNewUserMessage } = useChatMessages(agent_id || null);
+
+
 
   const parsedConfig: ChatConfig = config ? JSON.parse(config) : defaultProps;
   useChatStyles(parsedConfig.styles);
+
+  const handleToggleLoader = (status: boolean) => {
+    console.log('toggle loader', status);
+    if (status) {
+      if (!user) {
+        createUser({
+          status: 'active',
+          total_deposits: 0,
+          session_count: 0,
+          last_login: new Date().toISOString(),
+        });
+      } else {
+        initializeSession(user.user_id);
+      }
+      if (session) {
+        loadSessionMessages();
+      }
+      else {
+        loadFirstMessage('Hello, how can I help you today?');
+      }
+    }
+  }
 
 
   return (
@@ -69,7 +74,9 @@ function Chat({ domElement }: ChatProps) {
       zoomStep={parsedConfig.zoomStep}
       showBadge={parsedConfig.showBadge}
       resizable
-      resizableProps={{ heightOffset: 105, widthOffset: 35 }}
+      emojis
+      handleToggle={handleToggleLoader}
+      resizableProps={{ heightOffset: 55, widthOffset: 35 }}
     />
   );
 }

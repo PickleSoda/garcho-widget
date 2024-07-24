@@ -29,6 +29,7 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
   const [user, setUser] = useState<User | null>(getUserFromCookies());
 
   const createUserMutation: UseMutationResult<UserResponse, Error, Partial<User>> = useMutation({
@@ -39,16 +40,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     mutationFn: (data: Partial<User>) => axiosInstance.put(`/users/update/${user?.user_id}`, data),
   });
 
-  useEffect(() => {
-    if (user) {
-      setUserToCookies(user);
-    }
-  }, [user]);
-
   const createUser = (data: Partial<User>) => {
     createUserMutation.mutate(data, {
       onSuccess: (response) => {
         setUser(response.data.user);
+        setUserToCookies(response.data.user);
       },
       onError: (error) => {
         console.error('Error creating user:', error);

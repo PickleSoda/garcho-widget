@@ -1,7 +1,7 @@
 // src/hooks/useChatStyles.ts
 
 import { useEffect } from 'react';
-import { ChatConfig } from "../types";
+import { ChatConfig } from "../config/types";
 
 const useChatStyles = (styles: ChatConfig['styles']) => {
   useEffect(() => {
