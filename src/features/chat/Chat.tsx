@@ -1,26 +1,25 @@
-import React, {  useRef } from 'react';
-import { Widget } from '@picklesoda/react-chat-widget';
+import React, { useRef, useMemo } from 'react';
+import { Widget, toggleInputDisabled } from '@picklesoda/react-chat-widget';
 import { ChatConfig, defaultProps } from "./config";
 import useChatMessages from './hooks/useChatMessages';
 import useChatStyles from './hooks/useChatStyles';
 import { useChatSession } from './context/ChatSessionContext';
 import { useUser } from '../auth/context/UserContext';
-import { toggleInputDisabled } from '@picklesoda/react-chat-widget';
 
 interface ChatProps {
   domElement: HTMLElement | null;
 }
 
 function Chat({ domElement }: ChatProps) {
-  const config = domElement?.getAttribute("data-garcho-conf");
-  const agent_id = domElement?.getAttribute('data-agent-id');
+  const config = domElement?.getAttribute("data-garcho-conf") || '{}';
+  const agent_id = domElement?.getAttribute('data-agent-id') || '';
   const message = domElement?.getAttribute('data-message') || 'Hello, how can I help you today?';
 
   const { user, createUser } = useUser();
   const { session, loadSessionMessages, initializeSession } = useChatSession();
-  const { handleNewUserMessage } = useChatMessages(agent_id || null);
+  const { handleNewUserMessage } = useChatMessages(agent_id);
 
-  const parsedConfig: ChatConfig = config ? JSON.parse(config) : defaultProps;
+  const parsedConfig: ChatConfig = useMemo(() => config ? JSON.parse(config) : defaultProps, [config]);
   useChatStyles(parsedConfig.styles);
 
   const hasLoadedMessages = useRef(false);
