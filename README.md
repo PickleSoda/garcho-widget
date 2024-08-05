@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+````markdown
+# Garcho Chat Widget
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Garcho is a customizable chatbot widget that can be easily integrated into your web application. This document provides instructions for development, building the widget, and integrating it into your application.
 
-## Available Scripts
+## Development
 
-In the project directory, you can run:
+To start the development server, run the following command:
 
-### `npm start`
+```bash
+npm run start
+```
+````
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Building the Widget
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To build the widget, run the following command:
 
-### `npm test`
+```bash
+npm run build:widget
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This will compile the widget using Parcel and generate the necessary files for deployment.
 
-### `npm run build`
+Locate the build css/javascript inside dist directory.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Integration
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To add the Garcho widget to your web application, include the following code in your HTML. Make sure to load the widget script and styles after the initial page load to avoid slowing down the main content.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```html
+<div
+  id="Garcho"
+  data-agent-id="2"
+  data-web-token="DyTmbaDmUrfxAF3DCwgF8rCabG6dowJs5HWFJcqtb80"
+  data-garcho-conf='{
+            "title": "Garcho",
+            "subtitle": "Customisable chatbot",
+            "senderPlaceHolder": "Type a message...",
+            "showCloseButton": true,
+            "fullScreenMode": false,
+            "autofocus": true,
+            "chatId": "rcw-chat-container",
+            "launcherOpenLabel": "Open chat",
+            "launcherCloseLabel": "Close chat",
+            "launcherOpenImg": "chat.svg",
+            "launcherCloseImg": "",
+            "sendButtonAlt": "Send",
+            "showTimeStamp": true,
+            "imagePreview": false,
+            "zoomStep": 80,
+            "showBadge": true,
+            "styles": {
+                "clientMessageText": " background-image: linear-gradient(135deg, rgba(42, 39, 218, 0.72) 0%, rgba(0, 204, 255, 0.72) 100%); color: white;",
+                "responseMessageText": " background-color: rgb(240, 242, 247); color: black;",
+                "header": " background-image: linear-gradient(135deg, rgba(42, 39, 218, 0.72) 0%, rgba(0, 204, 255, 0.72) 100%);",
+                "closeButton": "background-color: #2563EB;",
+                "launcher": " background-image: linear-gradient(135deg, rgba(42, 39, 218, 0.72) 0%, rgba(0, 204, 255, 0.72) 100%);",
+                "container": "background-color: white",
+                "sender": " background-color: white; color: black"
+            }
+        }'
+  data-message="Hello! How can I help you today?"
+></div>
 
-### `npm run eject`
+<script>
+  window.addEventListener("load", () => {
+    const script = document.createElement("script");
+    script.src = "path/to/your/widget.js";
+    document.body.appendChild(script);
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "path/to/your/widget.css";
+    document.head.appendChild(link);
+  });
+</script>
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Replace `'path/to/your/widget.js'` and `'path/to/your/widget.css'` with the actual paths to your built widget script and stylesheet.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This setup ensures that the widget script and styles are loaded after the initial page load, preventing any slowdown of the main content.
